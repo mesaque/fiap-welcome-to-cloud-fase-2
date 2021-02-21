@@ -30,7 +30,7 @@ A entrega deve ser feita sempre pela plataforma FIAP ON por um dos integrantes, 
 
  
 
-CRITÉRIOS DE AVALIAÇÃO
+## CRITÉRIOS DE AVALIAÇÃO
 
 CUMPRIMENTO DE PRAZO: o artigo deve estar publicado antes do término do prazo desta atividade.
 
