@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  web-server:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    env_file: .env
+    restart: always
+    depends_on: 
+      - mysql
+    volumes:
+      - "${PWD}:/var/www/html/"
+    ports:
+      - "8080:80"
+
+  mysql:
+    image: mysql:8.0.19
+    restart: always
+    env_file: .env
+    volumes:
+      - "${PWD}:/opt"
+
+  sidecar:
+    image: mysql:8.0.19
+    restart: "on-failure"
+    env_file: .env
+    depends_on:
+      - mysql
+      - web-server
+    volumes:
+      - "${PWD}:/opt"
+    command: /bin/bash -c "mysql --host=$DB_HOST --user=$DB_USER --password=$MYSQL_ROOT_PASSWORD < /opt/mysql-statements.sql"

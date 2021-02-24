@@ -3,7 +3,7 @@
 $host = getenv("DB_HOST");
 $dbname = getenv("DB_NAME");
 $dbuser = getenv("DB_USER");
-$dbpassword = getenv("DB_PASSWORD");
+$dbpassword = getenv("MYSQL_ROOT_PASSWORD");
 
 $_SESSION['link'] = new mysqli($host, $dbuser, $dbpassword, $dbname);
 
