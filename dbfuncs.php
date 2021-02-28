@@ -17,7 +17,11 @@ if ($link->connect_error) {
 function getSelect($sql){
 	$result = $_SESSION['link']->query($sql);
 	if( $result  ) {
-		return array( $result->fetch_row() );
+		$rows = [];
+		while($row = $result->fetch_array()){
+			$rows[] = $row;
+		}
+		return $rows;
 	}
 	return false;
 }
