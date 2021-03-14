@@ -11,6 +11,8 @@ $dbpassword = getenv("MYSQL_ROOT_PASSWORD");
 $dbConnection = new mysqli($host, $dbuser, $dbpassword, $dbname);
 
 if ($dbConnection->connect_error) {
+	
+    // Removido o echo que exibia na tela o erro
     error_log("Error: Unable to connect to MySQL.", 0);
     error_log("Debugging errno: " . mysqli_connect_errno(), 0);
     error_log("Debugging error: " . mysqli_connect_error(), 0);
