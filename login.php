@@ -1,12 +1,18 @@
 <?php
 require_once 'dbfuncs.php';
 
-if($_SERVER['REQUEST_METHOD'] == "POST") {
 
+// removido aquele EVAL muito louco sem a menor necessidade
+
+if($_SERVER['REQUEST_METHOD'] == "POST") {
+	
+	// Removido o $_REQUEST para um método único reduzindo a superfície de ataque
 	$username = $_POST['username'];
 	$password = $_POST['password'];
 
 	if(!empty($username) && !empty($password)) {
+		
+		//bind param para evitar SQL INJECTION
 		$authSQL  = $dbConnection->prepare('SELECT * FROM users WHERE username = ? AND password = ?');
 		$authSQL->bind_param('ss', $username, $password);
 		$authed = getSelect($authSQL);
@@ -35,6 +41,7 @@ else {
 </form>
 <?
 } else {
+	//Saída tratada XSS
 	printf("Welcome Back %s", htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'));
 }
 }
