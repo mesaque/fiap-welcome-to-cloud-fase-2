@@ -1,25 +1,31 @@
 <?php
-require_once 'common.php';
+ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+ini_set('display_errors', 0);
+ini_set('log_errors', 0);
+
 require_once 'dbfuncs.php';
 
-$getUser = $_REQUEST["username"];
-$getId    = $_REQUEST["id"];
+$getUser = $_GET["username"];
+$getId  = intval( $_GET["id"] );
 
-// ' UNION SELECT 1,1,1,1,LOAD_FILE('/etc/passwd'),'1
+$results = false;
 
 if(!empty($getUser)) {
-	$query   = "select * from users where username = '" . $getUser . "'";
+	$query  = $dbConnection->prepare('SELECT * FROM users WHERE username = ?');
+
+	$query->bind_param('s', $getUser);
 	$results = getSelect($query);
 }
 elseif(!empty($getId)) {
-	$query   = "select * from users where id = " . $getId;
+	$query  = $dbConnection->prepare('SELECT * FROM users WHERE id = ?');
+	$query->bind_param('i', $getId);
+
 	$results = getSelect($query);
 }
 
-echo $query . "<br>";
 
 if(!$results) {
-	echo "Unable to find users: " . $_GET["username"];
+	printf("Unable to find users: %s", htmlspecialchars($getUser, ENT_QUOTES, 'UTF-8') );
 }
 else {
 	foreach($results as $row) {

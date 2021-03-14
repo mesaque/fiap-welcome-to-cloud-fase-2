@@ -1,22 +1,26 @@
 <?php
 
+session_start();
+
+
 $host = getenv("DB_HOST");
 $dbname = getenv("DB_NAME");
 $dbuser = getenv("DB_USER");
 $dbpassword = getenv("MYSQL_ROOT_PASSWORD");
 
-$_SESSION['link'] = new mysqli($host, $dbuser, $dbpassword, $dbname);
+$dbConnection = new mysqli($host, $dbuser, $dbpassword, $dbname);
 
-if ($link->connect_error) {
-    echo "Error: Unable to connect to MySQL." . PHP_EOL;
-    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
-    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+if ($dbConnection->connect_error) {
+    error_log("Error: Unable to connect to MySQL.", 0);
+    error_log("Debugging errno: " . mysqli_connect_errno(), 0);
+    error_log("Debugging error: " . mysqli_connect_error(), 0);
     exit;
 }
 
 function getSelect($sql){
-	$result = $_SESSION['link']->query($sql);
-	if( $result  ) {
+	$sql->execute();
+	$result = $sql->get_result();
+	if( $result->num_rows ) {
 		$rows = [];
 		while($row = $result->fetch_array()){
 			$rows[] = $row;

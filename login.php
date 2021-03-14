@@ -1,23 +1,22 @@
 <?php
-require_once 'common.php';
 require_once 'dbfuncs.php';
 
-eval ("echo ".$_REQUEST["user_name"].";");
-
 if($_SERVER['REQUEST_METHOD'] == "POST") {
-	if(!empty($_REQUEST['username']) && !empty($_REQUEST['password'])) {
-		$authSQL = "select * from users where username = '" . $_REQUEST['username'] .
-		   "' and password = '" . $_REQUEST['password'] . "'"; 
+
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+
+	if(!empty($username) && !empty($password)) {
+		$authSQL  = $dbConnection->prepare('SELECT * FROM users WHERE username = ? AND password = ?');
+		$authSQL->bind_param('ss', $username, $password);
 		$authed = getSelect($authSQL);
 
 		if(!$authed) {
-			echo 'Invalid login.<br>';
-			echo 'SQL Used: ' . $authSQL;
+			echo 'Something Went Wrong.<br>';
 			die;
 		}
 		else {
 			echo 'Success, you authed! <br>';
-			echo 'SQL Used: ' . $authSQL;
 			$_SESSION['authed'] = true;
 			$_SESSION['userid'] = $authed[0][0];
 			$_SESSION['username'] = $authed[0][1];
@@ -25,6 +24,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 	}
 }
 else {
+	if( true !== $_SESSION['authed'] ){
 ?>
 <form method="POST">
 	<label for="username">username:</label>
@@ -34,4 +34,7 @@ else {
 	<input type="submit" value="Login!">
 </form>
 <?
+} else {
+	printf("Welcome Back %s", htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'));
+}
 }
